@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 
+#include "Engine/World.h"
+
 #include "CelestialBody.h"
 
 #include "SimController.generated.h"
@@ -19,12 +21,28 @@ public:
 	ASimController();
 
 protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+	// - PROPERTIES -- 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Control")
 		TArray<ACelestialBody*> BodiesArray;
 
+	UPROPERTY(EditAnywhere)
+		ACelestialBody* BodyHold;
 
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Control")
+		uint8 TotalBodies = 5;
+
+	// - FUNCTIONS
+	UFUNCTION(BlueprintCallable, Category = "Control")
+		void ModifyBodyAmn();
+
+	UFUNCTION(BlueprintCallable, Category = "Control")
+		void AddBody(); //FVector WorldPos
+
+	UFUNCTION(BlueprintCallable, Category = "Control")
+		void RemoveBody();
 
 public:	
 	// Called every frame

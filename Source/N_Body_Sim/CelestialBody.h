@@ -33,10 +33,10 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 		UStaticMeshComponent* BodyMesh;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UStaticMesh* SphereObject;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UMaterialInstance* BodyMaterial;
 
 	// Properties
