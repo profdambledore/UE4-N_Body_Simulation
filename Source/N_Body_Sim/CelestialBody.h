@@ -25,21 +25,20 @@ public:
 	// Sets default values for this pawn's properties
 	ACelestialBody();
 
+	// - FUNCTIONS
+	UFUNCTION(BlueprintCallable)
+		void SetupBody(UStaticMesh* SphereObject, UMaterialInstance* BodyMaterial);
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	// Components
+	// - COMPONENTS
 	UPROPERTY(VisibleAnywhere)
 		UStaticMeshComponent* BodyMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UStaticMesh* SphereObject;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UMaterialInstance* BodyMaterial;
-
-	// Properties
+	// - PROPERTIES
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Body Properties")
 		FVector WorldPos = FVector(0.0f, 0.0f, 0.0f);
 
@@ -62,5 +61,4 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 };

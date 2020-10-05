@@ -17,6 +17,13 @@ ACelestialBody::ACelestialBody()
 // Called when the game starts or when spawned
 void ACelestialBody::BeginPlay()
 {
+	
+
+	Super::BeginPlay();
+}
+
+void ACelestialBody::SetupBody(UStaticMesh* SphereObject, UMaterialInstance* BodyMaterial)
+{
 	// Setup Static Mesh
 	BodyMesh->SetStaticMesh(SphereObject);
 
@@ -25,8 +32,6 @@ void ACelestialBody::BeginPlay()
 	UMaterialInstanceDynamic* BodyDynMaterial = UMaterialInstanceDynamic::Create(BodyMaterial, this);
 	BodyDynMaterial->SetVectorParameterValue("BodyColour", Colour);
 	BodyMesh->SetMaterial(0, BodyDynMaterial);
-
-	Super::BeginPlay();
 }
 
 // Called every frame

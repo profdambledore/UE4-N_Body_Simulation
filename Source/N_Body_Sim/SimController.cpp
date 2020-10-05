@@ -34,6 +34,7 @@ void ASimController::ModifyBodyAmn()
 void ASimController::AddBody() 
 {
 	BodyHold = GetWorld()->SpawnActor<ACelestialBody>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), FActorSpawnParameters());
+	BodyHold->SetupBody(SphereObject, BodyMaterial);
 	BodiesArray.Push(BodyHold);
 }
 

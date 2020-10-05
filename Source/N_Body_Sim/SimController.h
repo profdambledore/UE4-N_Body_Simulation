@@ -24,6 +24,13 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// - COMPONENTS
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UStaticMesh* SphereObject;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UMaterialInstance* BodyMaterial;
+
 	// - PROPERTIES -- 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Control")
 		TArray<ACelestialBody*> BodiesArray;
