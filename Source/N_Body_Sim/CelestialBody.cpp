@@ -24,6 +24,7 @@ void ACelestialBody::SetupBody(UStaticMesh* SphereObject, UMaterialInstance* Bod
 {
 	// Setup Static Mesh
 	BodyMesh->SetStaticMesh(SphereObject);
+	BodyMesh->SetWorldScale3D(FVector(0.3, 0.3, 0.3));
 
 	// Set Random Colour
 	Colour = FVector(FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f));

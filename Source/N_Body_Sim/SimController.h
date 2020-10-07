@@ -6,6 +6,7 @@
 #include "GameFramework/Pawn.h"
 
 #include "Engine/World.h"
+#include "Math/UnrealMathUtility.h"
 
 #include "CelestialBody.h"
 
@@ -39,18 +40,32 @@ protected:
 		ACelestialBody* BodyHold;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Control")
-		uint8 TotalBodies = 5;
+		uint8 N = 100;
+
+	UPROPERTY()
+		double Solarmass = 1.98892e30;
+
+	UPROPERTY()
+		double GravitationalConstant = 6.67e-11;
 
 	// - FUNCTIONS
 	UFUNCTION(BlueprintCallable, Category = "Control")
 		void ModifyBodyAmn();
 
 	UFUNCTION(BlueprintCallable, Category = "Control")
-		void AddBody(); //FVector WorldPos
+		void AddBody(bool IsStartingBody);
 
 	UFUNCTION(BlueprintCallable, Category = "Control")
 		void RemoveBody();
 
+	UFUNCTION()
+		double SetStartPosition(FVector BodyRandPos);
+
+	UFUNCTION()
+		void StartingBodies(int NoOfBodies);
+
+	UFUNCTION()
+		void AddForcesToBodies(int NoOfBodies);
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

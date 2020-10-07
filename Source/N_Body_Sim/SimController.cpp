@@ -15,28 +15,34 @@ ASimController::ASimController()
 void ASimController::BeginPlay()
 {
 	Super::BeginPlay();
+
+	StartingBodies(N);
 	
 }
 
 void ASimController::ModifyBodyAmn()
 {
-	if (BodiesArray.Num() > TotalBodies) // There are more bodies in the simulation than needed
+	if (BodiesArray.Num() > N) // There are more bodies in the simulation than needed
 	{
 		RemoveBody();
 	}
-	if (BodiesArray.Num() < TotalBodies) // There are not enough bodies in the simulation
+	if (BodiesArray.Num() < N) // There are not enough bodies in the simulation
 	{
-		AddBody();
+		AddBody(false);
 	}
 }
 
 // Spawn a new body to the world and add it to the BodiesArray
-void ASimController::AddBody() 
+void ASimController::AddBody(bool IsStartingBody)
 {
 	BodyHold = GetWorld()->SpawnActor<ACelestialBody>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), FActorSpawnParameters());
 	BodyHold->SetupBody(SphereObject, BodyMaterial);
 	BodiesArray.Push(BodyHold);
-}
+	//if (IsStartingBody == false);
+	//{
+
+	//}
+};
 
 //Destroy the body in the newest array cell and remove it from said array.  If the array is empty, do nothing
 void ASimController::RemoveBody() 
@@ -49,7 +55,36 @@ void ASimController::RemoveBody()
 		BodyHold->Destroy();
 		GetWorld()->ForceGarbageCollection(true);
 	};
-};
+}
+
+// Set the start positions of the starting bodies.  Does not set body positions for any bodies added after the startup
+double ASimController::SetStartPosition(FVector BodyRandPos)
+{
+	double WorldX3 = BodyRandPos.X * BodyRandPos.X * BodyRandPos.X;
+	double WorldY3 = BodyRandPos.Y * BodyRandPos.Y * BodyRandPos.Y;
+	double WorldZ3 = BodyRandPos.Z * BodyRandPos.Z * BodyRandPos.Z;
+	double R3 = FMath::Pow(WorldX3 + WorldY3 + WorldZ3, 1.0 / 3.0);
+	double Numerator = GravitationalConstant * 1e6 * Solarmass;
+	return FMath::Pow(Numerator, 1.0 / 3.0);
+}
+
+void ASimController::StartingBodies(int NoOfBodies)
+{
+	float radius = 1e18;
+	for (int i = 0; i < NoOfBodies; i++)
+	{
+		double BodyX = 1e18 * exp(-1.8) * (0.5 - FMath::Rand());
+		double BodyY = 1e18 * exp(-1.8) * (0.5 - FMath::Rand());
+		double BodyZ = 1e18 * exp(-1.8) * (0.5 - FMath::Rand());
+		FVector RandPos = FVector(BodyX, BodyY, BodyZ);
+		AddBody(true);
+	}	
+}
+
+void ASimController::AddForcesToBodies(int NoOfBodies)
+{
+
+}
 
 // Called every frame
 void ASimController::Tick(float DeltaTime)
