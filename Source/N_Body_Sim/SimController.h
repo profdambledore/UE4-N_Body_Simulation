@@ -5,8 +5,12 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
+
 #include "Engine/World.h"
 #include "Math/UnrealMathUtility.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "CelestialBody.h"
 
@@ -26,6 +30,12 @@ protected:
 	virtual void BeginPlay() override;
 
 	// - COMPONENTS
+	UPROPERTY(EditAnywhere)
+		USpringArmComponent* CameraArm;
+
+	UPROPERTY(EditAnywhere)
+		UCameraComponent* CameraViewport;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UStaticMesh* SphereObject;
 
@@ -49,11 +59,22 @@ protected:
 		double GravitationalConstant = 6.67e-11;
 
 	// - FUNCTIONS
+	// Camera Control Functions
+	UFUNCTION(BlueprintCallable, Category = "Camera")
+		void CameraZoom(float AxisValue);
+
+	UFUNCTION(BlueprintCallable, Category = "Camera")
+		void RotateCameraX(float AxisValue);
+
+	UFUNCTION(BlueprintCallable, Category = "Camera")
+		void RotateCameraY(float AxisValue);
+
+	// Simulation Functions
 	UFUNCTION(BlueprintCallable, Category = "Control")
 		void ModifyBodyAmn();
 
 	UFUNCTION(BlueprintCallable, Category = "Control")
-		void AddBody(bool IsStartingBody);
+		void AddBody(bool IsStartingBody, FVector SpawnPos);
 
 	UFUNCTION(BlueprintCallable, Category = "Control")
 		void RemoveBody();
