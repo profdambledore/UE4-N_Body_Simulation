@@ -49,8 +49,8 @@ protected:
 	UPROPERTY(EditAnywhere)
 		ACelestialBody* BodyHold;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Control")
-		uint8 N = 100;
+	UPROPERTY()
+		uint16 N = 1000;
 
 	UPROPERTY()
 		double Solarmass = 1.98892e30;
@@ -80,13 +80,8 @@ protected:
 		void RemoveBody();
 
 	UFUNCTION()
-		double SetStartPosition(FVector BodyRandPos);
-
-	UFUNCTION()
 		void StartingBodies(int NoOfBodies);
 
-	UFUNCTION()
-		void AddForcesToBodies(int NoOfBodies);
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

@@ -11,6 +11,7 @@
 #include "Math/Vector.h"
 #include "Math/UnrealMathUtility.h"
 
+
 // Base
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
@@ -33,9 +34,6 @@ public:
 		void ResetForce();
 
 	UFUNCTION()
-		float DistanceBetweenBody(ACelestialBody* B);
-
-	UFUNCTION()
 		void AddForceToBodies(ACelestialBody* B);
 
 
@@ -47,10 +45,9 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 		UStaticMeshComponent* BodyMesh;
 
-
 	// - PROPERTIES
 	UPROPERTY()
-		double GravitationalConstant = 6.673e-11;
+		double GravitationalConstant = 6.6738;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Body Properties")
 		FVector Velocity = FVector(0.0f, 0.0f, 0.0f);
@@ -59,7 +56,7 @@ protected:
 		FVector Force = FVector(0.0f, 0.0f, 0.0f);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Body Properties")
-		uint8 Mass = 0;
+		uint8 Mass = 1;
 
 	// Randomization Properties
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Randomization Properties")

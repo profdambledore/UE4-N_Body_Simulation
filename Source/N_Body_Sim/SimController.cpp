@@ -9,7 +9,7 @@ ASimController::ASimController()
 	// Setup the simulations viewport
 	CameraArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraArm"));
 	CameraArm->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, 0.0f), FRotator(-90.0f, 0.0f, 0.0f));
-	CameraArm->TargetArmLength = 2000.0f;
+	CameraArm->TargetArmLength = 20000.0f;
 	CameraArm->bDoCollisionTest = false;
 
 	CameraViewport = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraViewport"));
@@ -36,15 +36,15 @@ void ASimController::BeginPlay()
 // Change the zoom level of the camera
 void ASimController::CameraZoom(float AxisValue)
 {
-	float Inverse = (AxisValue* 10) * -1;
+	float Inverse = (AxisValue* 100) * -1;
 	CameraArm->TargetArmLength = (CameraArm->TargetArmLength + Inverse);
 	if (CameraArm->TargetArmLength <= 1000)
 	{
 		CameraArm->TargetArmLength = 1000;
 	}
-	else if (CameraArm->TargetArmLength >= 3000)
+	else if (CameraArm->TargetArmLength >= 300000)
 	{
-		CameraArm->TargetArmLength = 3000;
+		CameraArm->TargetArmLength = 300000;
 	}
 }
 
@@ -68,10 +68,6 @@ void ASimController::ModifyBodyAmn()
 	{
 		RemoveBody();
 	}
-	//if (BodiesArray.Num() < N) // There are not enough bodies in the simulation
-	//{
-		//AddBody(false);
-	//}
 }
 
 // Spawn a new body to the world and add it to the BodiesArray
@@ -80,10 +76,6 @@ void ASimController::AddBody(bool IsStartingBody, FVector SpawnPos)
 	BodyHold = GetWorld()->SpawnActor<ACelestialBody>(SpawnPos, FRotator(0.0f, 0.0f, 0.0f), FActorSpawnParameters());
 	BodyHold->SetupBody(SphereObject, BodyMaterial);
 	BodiesArray.Push(BodyHold);
-	//if (IsStartingBody == false);
-	//{
-
-	//}
 };
 
 //Destroy the body in the newest array cell and remove it from said array.  If the array is empty, do nothing
@@ -99,28 +91,16 @@ void ASimController::RemoveBody()
 	};
 }
 
-// Set the start positions of the starting bodies.  Does not set body positions for any bodies added after the startup
-double ASimController::SetStartPosition(FVector BodyRandPos)
-{
-	double yes = 0;
-	return yes;
-}
-
 void ASimController::StartingBodies(int NoOfBodies)
 {
-	for (int i = 0; i < NoOfBodies; i++)
+	for (int i = 0; i < 1000; i++)
 	{
-		double BodyX = FMath::RandRange(-1000.0f, 1000.0f);
-		double BodyY = FMath::RandRange(-1000.0f, 1000.0f);
-		double BodyZ = FMath::RandRange(-1000.0f, 1000.0f);
+		double BodyX = FMath::RandRange(-10000.0f, 10000.0f);
+		double BodyY = FMath::RandRange(-10000.0f, 10000.0f);
+		double BodyZ = FMath::RandRange(-10000.0f, 10000.0f);
 		FVector RandPos = FVector(BodyX, BodyY, BodyZ);
 		AddBody(true, RandPos);
 	}	
-}
-
-void ASimController::AddForcesToBodies(int NoOfBodies)
-{
-
 }
 
 // Called every frame
@@ -128,6 +108,16 @@ void ASimController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	for (int i = 0; i < BodiesArray.Num(); i++)
+	{
+		for (int j = 0; j < BodiesArray.Num(); j++)
+		{
+			if (BodiesArray[i] != BodiesArray[j])
+			{
+				BodiesArray[i]->AddForceToBodies(BodiesArray[j]);
+			};
+		};
+	};
 }
 
 // Called to bind functionality to input
