@@ -27,7 +27,7 @@ void ACelestialBody::SetupBody(UStaticMesh* SphereObject, UMaterialInstance* Bod
 	BodyMesh->SetRelativeScale3D(FVector(0.1, 0.1, 0.1));
 
 	// Set Random Mass
-	Mass = FMath::RandRange(7.0f, 10.0f);
+	Mass = FMath::RandRange(6.0f, 9.0f);
 
 	// Set Random Colour
 	Colour = FVector(FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f));
@@ -36,27 +36,30 @@ void ACelestialBody::SetupBody(UStaticMesh* SphereObject, UMaterialInstance* Bod
 	BodyMesh->SetMaterial(0, BodyDynMaterial);
 }
 
-void ACelestialBody::ResetForce() // Resets force on this body
-{
-	Force = FVector(0.0f, 0.0f, 0.0f);
-}
-
 void ACelestialBody::AddForceToBodies(ACelestialBody* B)
 {
 	// Calculate forces applying to body
 	ACelestialBody* A = this;
 	FVector APos = GetActorLocation();
 	FVector BPos = B->GetActorLocation();
+
+	// Calculate forces for A
 	FVector DistanceOnAxis = FVector(BPos.X - APos.X, BPos.Y - APos.Y, BPos.Z - APos.Z);
 	float Distance = FVector::Dist(APos, BPos);
 	double NewForces = (GravitationalConstant * A->Mass * B->Mass) / (Distance * Distance);
-	A->Force.X += NewForces * DistanceOnAxis.X / Distance;
-	A->Force.Y += NewForces * DistanceOnAxis.Y / Distance;
-	A->Force.Z += NewForces * DistanceOnAxis.Z / Distance;
+	Force.X += NewForces * DistanceOnAxis.X / Distance;
+	Force.Y += NewForces * DistanceOnAxis.Y / Distance;
+	Force.Z += NewForces * DistanceOnAxis.Z / Distance;
 
+	// Calculate forces for B -- Inverse Calculations
+	B->Force.X += NewForces * (DistanceOnAxis.X * -1) / Distance;
+	B->Force.Y += NewForces * (DistanceOnAxis.Y * -1) / Distance;
+	B->Force.Z += NewForces * (DistanceOnAxis.Z * -1) / Distance;
+	
 	// Update Velocity
 	Velocity = FVector(Force.X * Mass, Force.Y * Mass, Force.Z * Mass);
-
+	B->Velocity = FVector(B->Force.X * B->Mass, B->Force.Y * B->Mass, B->Force.Z * B->Mass);
+	// Add repulsive potential?
 }
 
 // Called every frame
@@ -64,8 +67,12 @@ void ACelestialBody::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// Move body
-	AddActorWorldTransform(FTransform(FQuat(0, 0, 0, 0), Velocity, FVector(0.3, 0.3, 0.3)), false, 0, ETeleportType::None);
+	// Check if paused
+	if (bIsPaused == false)
+	{
+		// Move body
+		AddActorWorldTransform(FTransform(FQuat(0, 0, 0, 0), Velocity, FVector(0.3, 0.3, 0.3)), false, 0, ETeleportType::None);
+	};
 }
 
 // Called to bind functionality to input

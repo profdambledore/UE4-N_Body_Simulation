@@ -25,6 +25,9 @@ public:
 	// Sets default values for this pawn's properties
 	ASimController();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int32 N = 1000;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -50,13 +53,14 @@ protected:
 		ACelestialBody* BodyHold;
 
 	UPROPERTY()
-		uint16 N = 1000;
-
-	UPROPERTY()
 		double Solarmass = 1.98892e30;
 
 	UPROPERTY()
 		double GravitationalConstant = 6.67e-11;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool bIsPaused = false;
+
 
 	// - FUNCTIONS
 	// Camera Control Functions
@@ -70,6 +74,9 @@ protected:
 		void RotateCameraY(float AxisValue);
 
 	// Simulation Functions
+	UFUNCTION(BlueprintCallable)
+		void PauseSimulation();
+
 	UFUNCTION(BlueprintCallable, Category = "Control")
 		void ModifyBodyAmn();
 

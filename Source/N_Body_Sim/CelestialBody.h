@@ -31,11 +31,10 @@ public:
 		void SetupBody(UStaticMesh* SphereObject, UMaterialInstance* BodyMaterial);
 
 	UFUNCTION()
-		void ResetForce();
-
-	UFUNCTION()
 		void AddForceToBodies(ACelestialBody* B);
 
+	UPROPERTY()
+		bool bIsPaused = false;
 
 protected:
 	// Called when the game starts or when spawned
@@ -56,7 +55,7 @@ protected:
 		FVector Force = FVector(0.0f, 0.0f, 0.0f);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Body Properties")
-		uint8 Mass = 1;
+		uint8 Mass;
 
 	// Randomization Properties
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Randomization Properties")

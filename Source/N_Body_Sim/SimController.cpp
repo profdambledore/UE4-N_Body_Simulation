@@ -61,6 +61,27 @@ void ASimController::RotateCameraY(float AxisValue)
 }
 
 // Simulation functions
+// Pause or Un-pause the Simulation
+void ASimController::PauseSimulation()
+{
+	if (bIsPaused == true)
+	{
+		bIsPaused = false;
+		for (int i = 0; i < BodiesArray.Num(); i++)
+		{
+			BodiesArray[i]->bIsPaused = false;
+		}
+	}
+	else
+	{
+		bIsPaused = true;
+		for (int i = 0; i < BodiesArray.Num(); i++)
+		{
+			BodiesArray[i]->bIsPaused = true;
+		}
+	}
+}
+
 // Called every time a new body is added after the beginning bodies
 void ASimController::ModifyBodyAmn()
 {
@@ -93,10 +114,10 @@ void ASimController::RemoveBody()
 
 void ASimController::StartingBodies(int NoOfBodies)
 {
-	for (int i = 0; i < 1000; i++)
+	for (int i = 0; i < N; i++)
 	{
 		double BodyX = FMath::RandRange(-10000.0f, 10000.0f);
-		double BodyY = FMath::RandRange(-10000.0f, 10000.0f);
+		double BodyY = FMath::RandRange(-10000.0f, 10000.0f); // Uniformed spherical distribution?
 		double BodyZ = FMath::RandRange(-10000.0f, 10000.0f);
 		FVector RandPos = FVector(BodyX, BodyY, BodyZ);
 		AddBody(true, RandPos);
@@ -108,13 +129,16 @@ void ASimController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	for (int i = 0; i < BodiesArray.Num(); i++)
+	if (bIsPaused == false)
 	{
-		for (int j = 0; j < BodiesArray.Num(); j++)
+		for (int i = 0; i < BodiesArray.Num(); i++)
 		{
-			if (BodiesArray[i] != BodiesArray[j])
+			for (int j = i; j < BodiesArray.Num(); j++)
 			{
-				BodiesArray[i]->AddForceToBodies(BodiesArray[j]);
+				if (BodiesArray[i] != BodiesArray[j])
+				{
+					BodiesArray[i]->AddForceToBodies(BodiesArray[j]);
+				};
 			};
 		};
 	};
