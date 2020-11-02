@@ -26,6 +26,10 @@ public:
 	// Sets default values for this pawn's properties
 	ACelestialBody();
 
+	// - COMPONENTS
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		UStaticMeshComponent* BodyMesh;
+
 	// - FUNCTIONS
 	UFUNCTION(BlueprintCallable)
 		void SetupBody(UStaticMesh* SphereObject, UMaterialInstance* BodyMaterial);
@@ -39,10 +43,6 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	// - COMPONENTS
-	UPROPERTY(VisibleAnywhere)
-		UStaticMeshComponent* BodyMesh;
 
 	// - PROPERTIES
 	UPROPERTY()

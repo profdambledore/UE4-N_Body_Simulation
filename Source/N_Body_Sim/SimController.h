@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 
 #include "CelestialBody.h"
+#include "SpatialPartioningOctree.h"
 
 #include "SimController.generated.h"
 
@@ -26,7 +27,13 @@ public:
 	ASimController();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 N = 1000;
+		int32 N = 10;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Debug)
+		bool bDrawDebugInfo = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		ASpatialPartioningOctree* SimulationOctree;
 
 protected:
 	// Called when the game starts or when spawned
@@ -78,9 +85,6 @@ protected:
 		void PauseSimulation();
 
 	UFUNCTION(BlueprintCallable, Category = "Control")
-		void ModifyBodyAmn();
-
-	UFUNCTION(BlueprintCallable, Category = "Control")
 		void AddBody(bool IsStartingBody, FVector SpawnPos);
 
 	UFUNCTION(BlueprintCallable, Category = "Control")
@@ -88,6 +92,12 @@ protected:
 
 	UFUNCTION()
 		void StartingBodies(int NoOfBodies);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void CreateBodyBounds(ACelestialBody* BodyToGenerate);
+
+	UFUNCTION(BlueprintCallable)
+		void AddBodyToOctree(ACelestialBody* BodyToAdd, FBoxSphereBounds NewSphereBounds);
 
 public:	
 	// Called every frame

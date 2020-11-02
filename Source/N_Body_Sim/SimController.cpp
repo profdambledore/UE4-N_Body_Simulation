@@ -82,20 +82,15 @@ void ASimController::PauseSimulation()
 	}
 }
 
-// Called every time a new body is added after the beginning bodies
-void ASimController::ModifyBodyAmn()
-{
-	if (BodiesArray.Num() > N) // There are more bodies in the simulation than needed
-	{
-		RemoveBody();
-	}
-}
-
 // Spawn a new body to the world and add it to the BodiesArray
 void ASimController::AddBody(bool IsStartingBody, FVector SpawnPos)
 {
 	BodyHold = GetWorld()->SpawnActor<ACelestialBody>(SpawnPos, FRotator(0.0f, 0.0f, 0.0f), FActorSpawnParameters());
 	BodyHold->SetupBody(SphereObject, BodyMaterial);
+
+	// Add Body to Octree - first calculate bounds in Blueprint
+	CreateBodyBounds(BodyHold);
+
 	BodiesArray.Push(BodyHold);
 };
 
@@ -122,6 +117,13 @@ void ASimController::StartingBodies(int NoOfBodies)
 		FVector RandPos = FVector(BodyX, BodyY, BodyZ);
 		AddBody(true, RandPos);
 	}	
+}
+
+void ASimController::AddBodyToOctree(ACelestialBody* BodyToAdd, FBoxSphereBounds NewSphereBounds)
+{
+	FOctreeElement* OE = new FOctreeElement();
+	OE->OctreeBody = BodyToAdd; OE->BoxSphereBounds = NewSphereBounds;
+	SimulationOctree->AddOctreeElement(*OE);
 }
 
 // Called every frame
