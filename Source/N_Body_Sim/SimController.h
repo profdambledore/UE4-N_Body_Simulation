@@ -33,7 +33,7 @@ public:
 		bool bDrawDebugInfo = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		ASpatialPartioningOctree* SimulationOctree;
+		ASpatialPartioningOctree* SimulationOctree = nullptr;
 
 protected:
 	// Called when the game starts or when spawned

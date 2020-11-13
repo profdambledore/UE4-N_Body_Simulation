@@ -24,7 +24,7 @@ void ASimController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	CreateNewOctree();
+	//CreateNewOctree();
 
 	// Show mouse curson
 	APlayerController* Controller = UGameplayStatics::GetPlayerController(this, 0);
@@ -90,9 +90,6 @@ void ASimController::AddBody(bool IsStartingBody, FVector SpawnPos)
 	BodyHold = GetWorld()->SpawnActor<ACelestialBody>(SpawnPos, FRotator(0.0f, 0.0f, 0.0f), FActorSpawnParameters());
 	BodyHold->SetupBody(SphereObject, BodyMaterial);
 
-	// Add Body to Octree - first calculate bounds in Blueprint
-	CreateBodyBounds(BodyHold);
-
 	BodiesArray.Push(BodyHold);
 };
 
@@ -135,8 +132,14 @@ void ASimController::Tick(float DeltaTime)
 
 	if (bIsPaused == false)
 	{
+		if (SimulationOctree != nullptr)
+		{
+			SimulationOctree->Destroy();
+		}
+		CreateNewOctree();
 		for (int i = 0; i < BodiesArray.Num(); i++)
 		{
+			CreateBodyBounds(BodiesArray[i]);
 			for (int j = i; j < BodiesArray.Num(); j++)
 			{
 				if (BodiesArray[i] != BodiesArray[j])
