@@ -24,6 +24,8 @@ void ASimController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	CreateNewOctree();
+
 	// Show mouse curson
 	APlayerController* Controller = UGameplayStatics::GetPlayerController(this, 0);
 	Controller->bShowMouseCursor = true;

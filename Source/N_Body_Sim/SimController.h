@@ -27,7 +27,7 @@ public:
 	ASimController();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 N = 10;
+		int32 N = 150;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Debug)
 		bool bDrawDebugInfo = true;
@@ -92,6 +92,9 @@ protected:
 
 	UFUNCTION()
 		void StartingBodies(int NoOfBodies);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void CreateNewOctree();
 
 	UFUNCTION(BlueprintImplementableEvent)
 		void CreateBodyBounds(ACelestialBody* BodyToGenerate);

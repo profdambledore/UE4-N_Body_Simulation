@@ -35,8 +35,6 @@ void ASpatialPartioningOctree::Tick(float DeltaTime)
 	{
 		int level = 0;
 		float max;
-		float offsetMax;
-		float offset;
 		FVector maxExtent;
 		FVector center;
 		FVector tempForCoercion;
@@ -76,77 +74,19 @@ void ASpatialPartioningOctree::Tick(float DeltaTime)
 			max = tempForCoercion.GetMax();
 			center = CurrentBounds.Center;
 
-			UE_LOG(LogTemp, Log, TEXT("center before: %s"), *center.ToString());
+			maxExtent = FVector(max, max, max);
 
-			// To understand the math here check out the constructors in FOctreeNodeContext
-			// Offset nodes that are not the root bounds
-			if (!OctreeData->GetRootBounds().Extent.Equals(CurrentBounds.Extent))
+			FOREACH_OCTREE_CHILD_NODE(ChildRef)
 			{
-				for (int i = 1; i < level; i++)
+				if (bDrawDebugInfo == true) 
 				{
-					// Calculate offset
-					offsetMax = max / (1.0f + (1.0f / FOctreeNodeContext::LoosenessDenominator));
-					offset = max - offsetMax;
-					max = offsetMax;
-
-					// Calculate Center Offset
-					if (center.X > 0)
+					if (CurrentNode.IsLeaf())
 					{
-						center.X = center.X + offset;
-					}
-					else
-					{
-						center.X = center.X - offset;
-					}
-
-					if (center.Y > 0)
-					{
-						center.Y = center.Y + offset;
-					}
-					else
-					{
-						center.Y = center.Y - offset;
-					}
-
-					if (center.Z > 0)
-					{
-						center.Z = center.Z + offset;
-					}
-					else
-					{
-						center.Z = center.Z - offset;
+						DrawDebugBox(GetWorld(), center, maxExtent, FColor().Green, false, 0.0f);
 					}
 				}
 			}
-
-			UE_LOG(LogTemp, Log, TEXT("max: %f"), max);
-			// UE_LOG(LogTemp, Log, TEXT("center of nodes: %s"), *center.ToString());
-
-			maxExtent = FVector(max, max, max);
-
-
-			// UE_LOG(LogTemp, Log, TEXT("Extent of nodes: %s"), *tempForCoercion.ToString());
-
-			DrawDebugBox(GetWorld(), center, maxExtent, FColor().Blue, false, 0.0f);
-			DrawDebugSphere(GetWorld(), center + maxExtent, 4.0f, 12, FColor().Green, false, 0.0f);
-			DrawDebugSphere(GetWorld(), center - maxExtent, 4.0f, 12, FColor().Red, false, 0.0f);
-
-			for (FSimulationOctree::ElementConstIt ElementIt(CurrentNode.GetElementIt()); ElementIt; ++ElementIt)
-			{
-				const FOctreeElement& Sample = *ElementIt;
-
-				// Draw debug boxes around elements
-				max = Sample.BoxSphereBounds.BoxExtent.GetMax();
-				maxExtent = FVector(max, max, max);
-				center = Sample.OctreeBody->GetActorLocation();
-
-				DrawDebugBox(GetWorld(), center, maxExtent, FColor().Green, false, 0.0f);
-				DrawDebugSphere(GetWorld(), center + maxExtent, 4.0f, 12, FColor().White, false, 0.0f);
-				DrawDebugSphere(GetWorld(), center - maxExtent, 4.0f, 12, FColor().White, false, 0.0f);
-				elementCount++;
-			}
 		}
-		// UE_LOG(LogTemp, Log, TEXT("Node Count: %d, Element Count: %d"), nodeCount, elementCount);
 	}
 }
 
@@ -154,7 +94,6 @@ void ASpatialPartioningOctree::AddOctreeElement(const FOctreeElement& inNewOctre
 {
 	check(bInitialized);
 	OctreeData->AddElement(inNewOctreeElement);
-	UE_LOG(LogTemp, Log, TEXT("Added element to Octree."));
 }
 
 TArray<FOctreeElement> ASpatialPartioningOctree::GetElementsWithinBounds(const FBoxSphereBounds& inBoundingBoxQuery)

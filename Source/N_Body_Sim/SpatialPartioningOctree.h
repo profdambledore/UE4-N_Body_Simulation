@@ -28,8 +28,8 @@ struct FOctreeElement
 
 struct FOctreeSematics
 {
-	enum { MaxElementsPerLeaf = 8 };
-	enum { InclusiveElementsPerNode = 1 };
+	enum { MaxElementsPerLeaf = 1 };
+	enum { InclusiveElementsPerNode = 8 };
 	enum { MaxNodeDepth = 10 };
 
 	typedef TInlineAllocator<MaxElementsPerLeaf> ElementAllocator;
