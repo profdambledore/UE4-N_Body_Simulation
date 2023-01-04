@@ -6,6 +6,8 @@ I also researched optimization methods could be used and decided to implement th
 
 The simulation was able to run 1000 bodies at a stable 40 FPS, while also being able to simulate 2,500 bodies at 8 FPS.  I speculate this is due to how many objects are rendered in the scene and not the calculations made.
 
+## - [Technical Report](https://github.com/profdambledore/UE4-N_Body_Simulation)
+
 ### Controls
 * WASD - Rotate Simulation
 * Scroll Wheel - Zoom In / Out
